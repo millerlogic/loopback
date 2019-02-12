@@ -11,24 +11,11 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"bazil.org/fuse"
 	"bazil.org/fuse/fs"
+	"github.com/millerlogic/loopback"
 )
-
-var (
-	inMemoryXattr bool
-	latency       time.Duration
-)
-
-func init() {
-	flag.BoolVar(&inMemoryXattr, "in-memory-xattr", false,
-		"use an in-memory implementation for xattr. Otherwise,\n"+
-			"fall back to the ._ file approach provided by osxfuse.")
-	flag.DurationVar(&latency, "latency", 0,
-		"add an artificial latency to every fuse handler on every call")
-}
 
 func usage() {
 	fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
@@ -51,7 +38,7 @@ func main() {
 		fuse.FSName("loopback"),
 		fuse.Subtype("loopback-fs"),
 		fuse.VolumeName("goLoopback"),
-		fuse.AllowRoot(),
+		//fuse.AllowRoot(),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -66,7 +53,7 @@ func main() {
 
 	log.Println("mounted!")
 
-	err = fs.Serve(c, newFS(flag.Arg(0)))
+	err = fs.Serve(c, loopback.New(flag.Arg(0)))
 	if err != nil {
 		log.Fatal(err)
 	}

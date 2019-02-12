@@ -4,7 +4,7 @@
 
 // +build linux
 
-package main
+package loopback
 
 import (
 	"context"

@@ -4,7 +4,7 @@
 
 // +build darwin,amd64
 
-package main
+package loopback
 
 import (
 	"syscall"
